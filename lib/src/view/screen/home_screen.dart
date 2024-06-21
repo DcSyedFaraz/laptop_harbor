@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:laptop_harbor/core/app_data.dart';
 import 'package:laptop_harbor/src/view/screen/cart_screen.dart';
+import 'package:laptop_harbor/src/view/screen/register.dart';
 import 'package:laptop_harbor/src/view/widget/page_wrapper.dart';
 import 'package:laptop_harbor/src/view/screen/profile_screen.dart';
 import 'package:laptop_harbor/src/view/screen/favorite_screen.dart';
@@ -24,6 +26,23 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int newIndex = 0;
+  bool _isLoggedIn = false; // Add a flag to track login status
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus(); // Check login status when the screen is initialized
+  }
+
+  Future<void> _checkLoginStatus() async {
+    final user = await FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      _isLoggedIn = true;
+    } else {
+      _isLoggedIn = false;
+    }
+    setState(() {}); // Update the UI
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +79,11 @@ class _HomeScreenState extends State<HomeScreen> {
               child: child,
             );
           },
-          child: HomeScreen.screens[newIndex],
+          child: _isLoggedIn
+             ? HomeScreen.screens[newIndex]
+              : newIndex == 3
+                 ? const LoginRegisterScreen() // Show Register/Login screen if not logged in
+                  : HomeScreen.screens[newIndex],
         ),
       ),
     );

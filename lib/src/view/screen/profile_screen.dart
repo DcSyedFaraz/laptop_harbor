@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:laptop_harbor/src/view/screen/register.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -24,6 +26,17 @@ class ProfileScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 20),
               )
             ],
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              // Navigate to the login screen or any other screen you want
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginRegisterScreen()),
+              );
+            },
+            child: const Text('Logout'),
           )
         ],
       ),

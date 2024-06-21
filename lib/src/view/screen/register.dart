@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:laptop_harbor/src/view/screen/profile_screen.dart';
 
 class LoginRegisterScreen extends StatefulWidget {
   const LoginRegisterScreen({super.key});
@@ -29,6 +31,11 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen> {
         if (isLogin) {
           await _auth.signInWithEmailAndPassword(
               email: _email, password: _password);
+          Fluttertoast.showToast(msg: 'Login successful');
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const ProfileScreen()),
+          );
         } else {
           await _auth.createUserWithEmailAndPassword(
               email: _email, password: _password);
@@ -36,6 +43,7 @@ class _LoginRegisterScreenState extends State<LoginRegisterScreen> {
       } catch (e) {
         // Handle errors here
         // ignore: use_build_context_synchronously
+        Fluttertoast.showToast(msg: 'Error: $e');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.toString())),
         );

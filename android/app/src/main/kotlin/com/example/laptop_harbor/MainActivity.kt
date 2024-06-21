@@ -1,4 +1,4 @@
-package com.example.laptop_harbor
+package com.laptopharbor.app
 
 import io.flutter.embedding.android.FlutterActivity
 

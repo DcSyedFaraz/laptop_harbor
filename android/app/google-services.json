@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "145145996116",
+    "firebase_url": "https://flutter-61ffe-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "flutter-61ffe",
+    "storage_bucket": "flutter-61ffe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:145145996116:android:02181821271839eb02dec1",
+        "android_client_info": {
+          "package_name": "com.laptopharbor.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCs1e9y9MzlIpAAkk8t3-SqOSnwZTCsK0I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
