@@ -17,7 +17,7 @@ class HomeScreen extends StatefulWidget {
     ProductListScreen(),
     FavoriteScreen(),
     CartScreen(),
-    ProfileScreen()
+    ProfileScreen(),
   ];
 
   @override
@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _checkLoginStatus() async {
-    final user = await FirebaseAuth.instance.currentUser;
+    final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       _isLoggedIn = true;
     } else {
@@ -80,9 +80,9 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           },
           child: _isLoggedIn
-             ? HomeScreen.screens[newIndex]
+              ? HomeScreen.screens[newIndex]
               : newIndex == 3
-                 ? const LoginRegisterScreen() // Show Register/Login screen if not logged in
+                  ? const LoginRegisterScreen() // Show Register/Login screen if not logged in
                   : HomeScreen.screens[newIndex],
         ),
       ),
