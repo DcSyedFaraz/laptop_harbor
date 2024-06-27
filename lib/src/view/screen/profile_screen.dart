@@ -41,11 +41,6 @@ class ProfileScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircleAvatar(
-              radius: 80,
-              backgroundImage: AssetImage('assets/images/profile_pic.png'),
-            ),
-            const SizedBox(height: 20),
             FutureBuilder<DocumentSnapshot>(
               future: FirebaseFirestore.instance
                   .collection('users')
@@ -57,37 +52,67 @@ class ProfileScreen extends StatelessWidget {
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else if (!snapshot.hasData || !snapshot.data!.exists) {
-                  return const Text('User');
+                  return const Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 80,
+                        backgroundImage:
+                            AssetImage('assets/images/profile_pic.png'),
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        'User',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                        ),
+                      ),
+                    ],
+                  );
                 } else {
                   final userData = snapshot.data!;
                   final name = userData['name'] ?? 'User';
-                  return Text(
-                    "Hello $name!",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25,
-                    ),
+                  final profilePictureUrl = userData['profilePictureUrl'] ?? '';
+                  return Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 80,
+                        backgroundImage: profilePictureUrl.isNotEmpty
+                            ? NetworkImage(profilePictureUrl)
+                            : AssetImage('assets/images/profile_pic.png')
+                                as ImageProvider,
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        "Hello $name!",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                        ),
+                      ),
+                    ],
                   );
                 }
               },
             ),
             const SizedBox(height: 10),
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset('assets/images/github.png', width: 30),
-                const SizedBox(width: 10),
-                const Text(
-                  "https://github.com/SinaSys",
-                  style: TextStyle(fontSize: 20),
-                ),
-              ],
+              // children: [
+              //   Image.asset('assets/images/github.png', width: 30),
+              //   const SizedBox(width: 10),
+              //   const Text(
+              //     "https://github.com/SinaSys",
+              //     style: TextStyle(fontSize: 20),
+              //   ),
+              // ],
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
                 await FirebaseAuth.instance.signOut();
                 Navigator.pushReplacement(
+                  // ignore: use_build_context_synchronously
                   context,
                   MaterialPageRoute(builder: (context) => const HomeScreen()),
                 );

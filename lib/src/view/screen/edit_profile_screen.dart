@@ -15,6 +15,7 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
+  bool _uploadingImage = false;
   final _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
@@ -65,6 +66,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           'contact': _contact,
           'profilePictureUrl': _profilePictureUrl,
         }, SetOptions(merge: true));
+        
         Fluttertoast.showToast(msg: 'Profile updated successfully');
         Navigator.pop(context);
       } catch (e) {
@@ -75,6 +77,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> _selectImage() async {
     try {
+      setState(() {
+        _uploadingImage = true;
+      });
       final XFile? image =
           await _imagePicker.pickImage(source: ImageSource.gallery);
       if (image != null) {
@@ -86,18 +91,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
         // Get the download URL after the upload is complete
         final snapshot = await uploadTask.whenComplete(() => null);
-      print('file here $file new $snapshot');
         final url = await snapshot.ref.getDownloadURL();
 
+        print('file here $url');
         setState(() {
           _profilePictureUrl = url;
+          _uploadingImage = false;
+        });
+        await _firestore.collection('users').doc(_user.uid).update({
+          'profilePictureUrl': _profilePictureUrl,
         });
 
         Fluttertoast.showToast(msg: 'Image uploaded successfully');
       } else {
+        setState(() {
+          _uploadingImage = false;
+        });
         Fluttertoast.showToast(msg: 'No image selected');
       }
     } catch (e) {
+      setState(() {
+        _uploadingImage = false;
+      });
       print('Error: $e');
       Fluttertoast.showToast(msg: 'Error uploading image: $e');
     }
@@ -126,8 +141,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     : null,
               ),
               IconButton(
-                icon: const Icon(Icons.camera_alt),
-                onPressed: _selectImage,
+                icon: _uploadingImage
+                    ? const CircularProgressIndicator()
+                    : const Icon(Icons.camera_alt),
+                onPressed: _uploadingImage ? null : _selectImage,
               ),
               TextFormField(
                 controller: _nameController,
